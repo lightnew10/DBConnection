@@ -1,0 +1,33 @@
+package fr.lightnew;
+
+public enum TypeSQL {
+    TINYINT,
+    SMALLINT,
+    MEDIUMINT,
+    INT,
+    BIGINT,
+    FLOAT,
+    DOUBLE,
+    DECIMAL,
+    DATE,
+    DATETIME,
+    TIMESTAMP,
+    TIME,
+    YEAR,
+    CHAR,
+    VARCHAR,
+    TINYTEXT,
+    TEXT,
+    MEDIUMTEXT,
+    LONGTEXT,
+    BINARY,
+    VARBINARY,
+    TINYBLOB,
+    BLOB,
+    MEDIUMBLOB,
+    LONGBLOB,
+    ENUM,
+    SET,
+    JSON,
+    GEOMETRY;
+}

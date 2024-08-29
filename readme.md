@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/lightnew10/DBConnection.svg)](https://jitpack.io/#lightnew10/DBConnection)
+
 # How to use ?
 
 ```java

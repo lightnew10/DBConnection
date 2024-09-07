@@ -1,6 +1,6 @@
 [![](https://jitpack.io/v/lightnew10/DBConnection.svg)](https://jitpack.io/#lightnew10/DBConnection)
 
-#Maven
+# Maven
 ```xml
 <repository>
     <id>jitpack.io</id>

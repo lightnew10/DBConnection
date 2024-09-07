@@ -1,5 +1,19 @@
 [![](https://jitpack.io/v/lightnew10/DBConnection.svg)](https://jitpack.io/#lightnew10/DBConnection)
 
+#Maven
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+
+<dependency>
+    <groupId>com.github.lightnew10</groupId>
+    <artifactId>DBConnection</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
 # How to use ?
 
 ```java

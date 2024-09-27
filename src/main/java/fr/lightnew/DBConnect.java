@@ -2,10 +2,12 @@ package fr.lightnew;
 
 import lombok.Getter;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Map;
 
 @Getter
@@ -34,6 +36,10 @@ public class DBConnect {
         this.database = database;
         createDataBase();
         connectSQL();
+    }
+
+    public DBConnect(String username, String password, String database) {
+        this(username, password, 3306, database);
     }
 
     /**
@@ -123,5 +129,34 @@ public class DBConnect {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public <T> void createTable(Class<T> clazz) {
+        for (Field field : clazz.getFields()) {
+            System.out.println("=======");
+            System.out.println(field.getName());
+            System.out.println(field.getType());
+            System.out.println(field.getType().toString().toUpperCase());
+            System.out.println(
+                    Arrays.stream(TypeSQL.values()).anyMatch(typeSQL -> typeSQL.name().equalsIgnoreCase(field.getType().toString()))
+            );
+            if (Arrays.stream(TypeSQL.values()).anyMatch(typeSQL -> typeSQL.name().equalsIgnoreCase(field.getType().toString())))
+                System.out.println(TypeSQL.valueOf(field.getType().toString().toUpperCase()));
+            else System.out.println("NO MATCH");
+        }
+
+        /*if (connection == null)
+            throw new RuntimeException("connection to your database is null");
+        if (nameTable == null || nameTable.isEmpty())
+            throw new RuntimeException("parameter 'nameTable' is null or empty");
+        if (customValue == null || customValue.isEmpty())
+            throw new RuntimeException("parameter 'value' is null or empty");
+        String query = "CREATE TABLE IF NOT EXISTS " + nameTable + " (" + customValue + ");";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 }

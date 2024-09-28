@@ -88,13 +88,13 @@ public void getter() {
             |  id  | name  |
             |  5   | test  |
             |  6   | mac   |
-            First String is ROW
-            Second String is VALUE ROW
-            Third String is table
+            First String is table
+            Second String is ROW
+            Third String is VALUE ROW
          */
-    dbGetter.verifyIsExist(dbConnect, "name", "test", "table_name");
+    dbGetter.verifyIsExist(dbConnect, "table_name", "name", "test");
     //Return true
-    dbGetter.verifyIsExist(dbConnect, "name", "aaa", "table_name");
+    dbGetter.verifyIsExist(dbConnect, "table_name", "name", "aaa");
     //Return false
 }
 ```

@@ -2,12 +2,10 @@ package fr.lightnew;
 
 import lombok.Getter;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Map;
 
 @Getter
@@ -56,10 +54,20 @@ public class DBConnect {
         }
     }
 
+    public void reConnect() {
+        try {
+            if (connection.isClosed())
+                connectSQL();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Create default database
      */
     private void createDataBase() {
+        reConnect();
         final String url = "jdbc:mysql://" + "localhost" + ":" + port + "/"  + "?useUnicode=true&characterEncoding=UTF-8";
         try {
             connection = DriverManager.getConnection(url, username, password);
@@ -83,32 +91,21 @@ public class DBConnect {
      * @param value The value is content of your table
      */
     public void createTable(String nameTable, boolean index, Map<String, TypeSQL> value) {
-        if (connection == null)
-            throw new RuntimeException("connection to your database is null");
-        if (nameTable == null || nameTable.isEmpty())
-            throw new RuntimeException("parameter 'nameTable' is null or empty");
+        reConnect();
         if (value == null || value.isEmpty())
             throw new RuntimeException("parameter 'value' is null or empty");
         StringBuilder builder = new StringBuilder("(");
         if (index)
             builder.append("id int NOT NULL AUTO_INCREMENT PRIMARY KEY,");
-        value.forEach((string, typeSQL) -> {
-            builder.append(string)
-                    .append(" ")
-                    .append(typeSQL.toString())
-                    .append(",");
-        });
+        value.forEach((string, typeSQL) -> builder.append(string)
+                .append(" ")
+                .append(typeSQL.getType())
+                .append(","));
         if (builder.charAt(builder.length() - 1) == ',')
             builder.deleteCharAt(builder.length() - 1);
 
         builder.append(");");
-        String query = "CREATE TABLE IF NOT EXISTS " + nameTable;
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        createTableCustomQuery(nameTable, builder.toString());
     }
 
     /**
@@ -116,47 +113,32 @@ public class DBConnect {
      * @param customValue The custom value is content of your table
      */
     public void createTable(String nameTable, String customValue) {
+        reConnect();
+        if (customValue == null || customValue.isEmpty())
+            throw new RuntimeException("parameter 'value' is null or empty");
+        createTableCustomQuery(nameTable, "(" + customValue + ")");
+    }
+
+    /**
+     *
+     * @param customQuery Create your custom query
+     */
+    public void createTableCustomQuery(String nameTable, String customQuery) {
+        reConnect();
         if (connection == null)
             throw new RuntimeException("connection to your database is null");
         if (nameTable == null || nameTable.isEmpty())
             throw new RuntimeException("parameter 'nameTable' is null or empty");
-        if (customValue == null || customValue.isEmpty())
+        if (customQuery == null || customQuery.isEmpty())
             throw new RuntimeException("parameter 'value' is null or empty");
-        String query = "CREATE TABLE IF NOT EXISTS " + nameTable + " (" + customValue + ");";
+        nameTable = nameTable.replace(" ", "_");
+        String query = "CREATE TABLE IF NOT EXISTS " + nameTable + " " + customQuery;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
+            System.out.println(statement);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public <T> void createTable(Class<T> clazz) {
-        for (Field field : clazz.getFields()) {
-            System.out.println("=======");
-            System.out.println(field.getName());
-            System.out.println(field.getType());
-            System.out.println(field.getType().toString().toUpperCase());
-            System.out.println(
-                    Arrays.stream(TypeSQL.values()).anyMatch(typeSQL -> typeSQL.name().equalsIgnoreCase(field.getType().toString()))
-            );
-            if (Arrays.stream(TypeSQL.values()).anyMatch(typeSQL -> typeSQL.name().equalsIgnoreCase(field.getType().toString())))
-                System.out.println(TypeSQL.valueOf(field.getType().toString().toUpperCase()));
-            else System.out.println("NO MATCH");
-        }
-
-        /*if (connection == null)
-            throw new RuntimeException("connection to your database is null");
-        if (nameTable == null || nameTable.isEmpty())
-            throw new RuntimeException("parameter 'nameTable' is null or empty");
-        if (customValue == null || customValue.isEmpty())
-            throw new RuntimeException("parameter 'value' is null or empty");
-        String query = "CREATE TABLE IF NOT EXISTS " + nameTable + " (" + customValue + ");";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
     }
 }

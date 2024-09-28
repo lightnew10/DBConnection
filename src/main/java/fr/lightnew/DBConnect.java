@@ -134,7 +134,6 @@ public class DBConnect {
         String query = "CREATE TABLE IF NOT EXISTS " + nameTable + " " + customQuery;
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            System.out.println(statement);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

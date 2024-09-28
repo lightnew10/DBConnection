@@ -27,7 +27,7 @@ Add the following to your Maven `pom.xml`:
     <dependency>
         <groupId>com.github.lightnew10</groupId>
         <artifactId>DBConnection</artifactId>
-        <version>1.5</version>
+        <version>1.51</version>
     </dependency>
 </dependencies>
 ```

@@ -67,7 +67,6 @@ public class DBConnect {
      * Create default database
      */
     private void createDataBase() {
-        reConnect();
         final String url = "jdbc:mysql://" + "localhost" + ":" + port + "/"  + "?useUnicode=true&characterEncoding=UTF-8";
         try {
             connection = DriverManager.getConnection(url, username, password);
